@@ -86,7 +86,7 @@ Visit [Roboflow Universe](https://universe.roboflow.com/) and explore other spor
 
 ## 🔥 demos
 
-https://github.com/roboflow/sports/assets/26109316/7ad414dd-cc4e-476d-9af3-02dfdf029205
+https://github.com/user-attachments/assets/fa9b21ef-9d05-45f3-9190-6ba7c1cc97ff
 
 ## 🏆 contribution
 
