@@ -1,24 +1,69 @@
 <div align="center">
 
-  <h1>sports</h1>
-
-[notebooks](https://github.com/roboflow/notebooks) | [inference](https://github.com/roboflow/inference) | [autodistill](https://github.com/autodistill/autodistill) | [maestro](https://github.com/roboflow/multimodal-maestro)
+  <h1>Football Analytics</h1>
 
 </div>
 
-## 👋 hello
+This repository is a computer vision project for football analytics, designed to provide detailed insights into the game through advanced video analysis. It is a fork of [roboflow/sports](https://github.com/roboflow/sports), which offers foundational functionality and examples for training models.
 
-In sports, every centimeter and every second matter. That's why Roboflow decided to use sports as a testing ground to push our object detection, image segmentation, keypoint detection, and foundational models to their limits. This repository contains reusable tools that can be applied in sports and beyond.
+**Declaration**: All models in this repository have been retrained to achieve improved accuracy compared to the original repository.
 
-## 🥵 challenges
+---
 
-Are you also a fan of computer vision and sports?  We welcome contributions from anyone who shares our passion! Together, we can build powerful open-source tools for sports analytics. Here are the main challenges we're looking to tackle:
+## Features and Workflow
 
-- **Ball tracking:** Tracking the ball is extremely difficult due to its small size and rapid movements, especially in high-resolution videos.
-- **Reading jersey numbers:** Accurately reading player jersey numbers is often hampered by blurry videos, players turning away, or other objects obscuring the numbers.
-- **Player tracking:** Maintaining consistent player identification throughout a game is a challenge due to frequent occlusions caused by other players or objects on the field.
-- **Player re-identification:** Re-identifying players who have left and re-entered the frame is tricky, especially with moving cameras or when players are visually similar.
-- **Camera calibration:** Accurately calibrating camera views is crucial for extracting advanced statistics like player speed and distance traveled. This is a complex task due to the dynamic nature of sports and varying camera angles.
+This project follows a step-by-step implementation based on the tutorial: [Football Analytics with YOLOv8 and ByteTrack](https://youtu.be/aBVGKoNZQUw?si=M7-6FJU2p5CUAJn_). Below is an overview of the workflow and features:
+
+1. **Object Detection**:
+   - **YOLOv8** is used to detect four classes: `player`, `goalkeeper`, `referee`, and `football`.
+
+2. **Player and Object Tracking**:
+   - **ByteTrack** tracks `players`, `goalkeepers`, and `referees`.
+
+3. **Field Keypoint Detection**:
+   - **YOLOv8-pose** detects the keypoints of the football field.
+
+4. **Team Classification**:
+   - Uses **K-means clustering** with SigLip output as the feature for classifying players into teams based on their jersey colors.
+
+5. **Bird-Eye View (BEV) Transformation**:
+   - Perspective projection transforms camera frames into a top-down BEV for better spatial analysis.
+
+---
+
+## Challenges and Improvements
+
+### 1. Unstable Keypoint Detection
+- **Issue**: The original training parameters for keypoint detection produced inconsistent results.
+- **Solution**: Enhanced data augmentation techniques, such as:
+  - Random perspective transformations.
+  - Random rotations.
+  - Increased random cropping.
+  - Additional training epochs.
+- **Result**: Improved model stability, which is critical for accurate perspective transformation to BEV.
+
+### 2. Occlusion in Player Tracking
+- **Issue**: ByteTrack often struggled with occlusions, causing ID switches.
+- **Solution**: Replaced ByteTrack with **DeepSORT** and used SigLip as the feature extractor.
+- **Result**: The feature-based tracker performed significantly better during player occlusions, as players from different teams usually have distinct jersey colors.
+
+### 3. Improving Feature Extraction
+- **Issue**: Initially, the feature extractor cropped the entire bounding box (bbox) around a player, leading to noisy background information.
+- **Solution**: Shrinking the bbox during cropping reduced background noise.
+- **Result**: Improved team classification and better tracking performance.
+
+### 4. Ball Trajectory in BEV
+- **Issue**: Using the ball's current position in the camera frame for perspective transformation often caused inaccuracies, especially when the ball was in the air.
+- **Solution**: Refined the ball trajectory using cues from changes in direction and velocity.
+- **Result**: Accurate BEV projection, even when the ball was airborne, as demonstrated in the video.
+
+---
+
+## Acknowledgments
+
+This project is built on the foundational work of the roboflow/sports repository and leverages the techniques explained in the [YouTube tutorial](https://youtu.be/aBVGKoNZQUw?si=M7-6FJU2p5CUAJn_). Special thanks to the creators for their contributions to sports analytics.
+
+Feel free to explore, contribute, or use this project to enhance football analytics workflows!
 
 ## 💻 install
 
